@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Księgarnia - książki</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="księgarnia, bookstore" name="keywords" />
+    <meta content="Księgarnia internetowa." name="description" />
+
+    <!-- Favicon -->
+    <link href="/assets/img/favicon.ico" rel="icon" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet" />
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Libraries Stylesheet -->
+    <link href="/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="/assets/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href="/assets/css/style.css" rel="stylesheet" />
+
+    <!-- Message Stylesheet -->
+    <link href="/assets/css/message.css" rel="stylesheet" />
+</head>
+
+<body>
+<div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Wczytywanie...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <div class="sidebar pe-4 pb-3">
+        <nav class="navbar bg-secondary navbar-dark">
+            <a th:href="@{/index}" class="navbar-brand mx-4 mb-3">
+                <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>Księgarnia</h3>
+            </a>
+
+            <div class="d-flex align-items-center ms-4 mb-4">
+                <div class="position-relative">
+                    <i class="fa fa-user me-lg-2"></i>
+                </div>
+                <div class="ms-3">
+                    <h6 class="mb-0">
+                        <span sec:authentication="principal.firstName"></span>
+                        <span sec:authentication="principal.lastName"></span>
+                    </h6>
+                    <div sec:authorize="hasRole('ROLE_Admin')">
+                        Admin
+                    </div>
+                    <div sec:authorize="hasRole('ROLE_Użytkownik')">
+                        Użytkownik
+                    </div>
+                </div>
+            </div>
+
+            <div class="navbar-nav w-100">
+                <a th:href="@{/index}" class="nav-item nav-link"><i class="fa fa-home me-2"></i>Strona główna</a>
+                <a sec:authorize="hasRole('ROLE_Admin')" th:href="@{/admin/dashboard}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Panel zarządzania</a>
+                <hr />
+                <a sec:authorize="hasRole('ROLE_Admin')" th:href="@{/admin/books}" class="nav-item nav-link active"><i class="fa fa-book me-2"></i>Książki</a>
+                <a sec:authorize="hasRole('ROLE_Admin')" th:href="@{/admin/orders}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Zamówienia</a>
+                <a sec:authorize="hasRole('ROLE_Admin')" th:href="@{/admin/users}" class="nav-item nav-link"><i class="fa fa-user me-2"></i>Użytkownicy</a>
+            </div>
+        </nav>
+    </div>
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+            <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+            </a>
+            <a href="#" class="sidebar-toggler flex-shrink-0">
+                <i class="fa fa-bars"></i>
+            </a>
+            <div class="navbar-nav align-items-center ms-auto">
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fa fa-toolbox me-lg-2"></i>
+                        <span class="d-none d-lg-inline-flex">Ustawienia</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                        <a th:href="@{/users/profile}" class="dropdown-item">
+                            <h6 class="fw-normal mb-0">Profil</h6>
+                        </a>
+                        <div sec:authorize="hasRole('ROLE_Admin')">
+                            <a th:href="@{/admin/users/changeName}" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Zmień imię i nazwisko</h6>
+                            </a>
+                            <hr class="dropdown-divider" />
+                        </div>
+                        <hr class="dropdown-divider" />
+                        <div sec:authorize="hasRole('ROLE_Admin')">
+                            <a th:href="@{/admin/users/changeUsername}" class="dropdown-item">
+                                <h6 class="fw-normal mb-0">Zmień nazwę użytkownika</h6>
+                            </a>
+                            <hr class="dropdown-divider" />
+                        </div>
+
+                        <a th:href="@{/users/changePassword}" class="dropdown-item">
+                            <h6 class="fw-normal mb-0">Zmień hasło</h6>
+                        </a>
+                        <hr class="dropdown-divider" />
+
+                        <a th:href="@{/users/deleteAccount}" class="dropdown-item">
+                            <h6 class="fw-normal mb-0">Usuń konto</h6>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-item">
+                    <a th:href="@{/logout}" class="nav-link">
+                        <i class="fa fa-door-open me-lg-2"></i>
+                        <span class="d-none d-lg-inline-flex">Wyloguj się</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <!-- Navbar End -->
+
+
+        <main>
+            <!-- Table Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="bg-secondary rounded h-100 p-4">
+                            <div class="message">
+                                <span th:utext="${message}"></span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <h3 class="mb-4">Książki</h3>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Dodaj książkę</button>
+                            </div>
+                            <br />
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Okładka</th>
+                                        <th>Tytuł</th>
+                                        <th>Autorzy</th>
+                                        <th>ISBN</th>
+                                        <th>Język</th>
+                                        <th>Rok publikacji</th>
+                                        <th>Wydawnictwo</th>
+                                        <th>Liczba stron</th>
+                                        <th>Opis</th>
+                                        <th>Cena (PLN)</th>
+                                        <th>Plik</th>
+                                        <th>Akcje</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="book,cover:${books}">
+                                        <td>
+                                            <img th:src="@{'data:image/png;base64,'+${covers[cover.index]}}" width="80" height="80" />
+                                        </td>
+                                        <td th:text="${book.title}"></td>
+                                        <td th:text="${book.authors}"></td>
+                                        <td th:text="${book.isbn}"></td>
+                                        <td th:text="${book.language}"></td>
+                                        <td th:text="${book.yearOfPublication}"></td>
+                                        <td th:text="${book.publisher}"></td>
+                                        <td th:text="${book.numberOfPages}"></td>
+                                        <td th:text="${book.description}"></td>
+                                        <td th:text="${book.price}"></td>
+                                        <td>
+                                            <a th:href="@{'/admin/books/download/'+${book.id}}" type="button"><span class="fa fa-link"></span></a>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a th:href="@{'/admin/books/coverAndFile/'+${book.id}}" type="button" id="cfButton" data-bs-toggle="modal" data-bs-target="#cfModal"><span class="fa fa-file me-2"></span></a>
+                                                <a th:href="@{/admin/books/findById/(id=${book.id})}" type="button" id="editButton" data-bs-toggle="modal" data-bs-target="#editModal"><span class="fa fa-edit me-2"></span></a>
+                                                <a th:href="@{/admin/books/delete/(id=${book.id})}" type="button" id="deleteButton" data-bs-toggle="modal" data-bs-target="#deleteModal"><span class="fa fa-trash me-2"></span></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Table End -->
+        </main>
+
+
+        <!-- Footer Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="bg-secondary rounded-top p-4">
+                <div class="row">
+                    <div class="col-12 col-sm-6 text-center text-sm-start">
+                        &copy; <a th:href="@{/index}">Księgarnia</a>, wszelkie prawa zastrzeżone.
+                    </div>
+                    <div class="col-12 col-sm-6 text-center text-sm-end">
+                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                        Designed By <a href="https://htmlcodex.com">HTML Codex</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+
+        <div class="modal fade" id="cfModal" tabindex="-1" role="dialog" aria-labelledby="cfModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-secondary">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cfModalLabel">Okładka oraz plik z książką</h5>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+                            Zamknij
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#" method="post" enctype="multipart/form-data" id="cfForm">
+
+                            <div class="form-group">
+                                <label for="book-cover-cf" class="col-form-label">Okładka</label>
+                                <input type="file" accept=".png" class="form-control" id="book-cover-cf" name="cover">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="book-file-cf" class="col-form-label">Plik</label>
+                                <input type="file" accept=".pdf" class="form-control" id="book-file-cf" name="file">
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <button style="display: block; margin-left: auto; margin-right: 0;" type="submit" class="btn btn-primary">Zapisz</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-secondary">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Nowa książka</h5>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+                            Zamknij
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/admin/books/addNew}" method="post">
+
+                            <div class="form-group">
+                                <label for="title-add" class="col-form-label">Tytuł</label>
+                                <input type="text" class="form-control" id="title-add" name="title" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="authors-add" class="col-form-label">Autorzy</label>
+                                <input type="text" class="form-control" id="authors-add" name="authors" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="isbn-add" class="col-form-label">ISBN</label>
+                                <input type="text" class="form-control" id="isbn-add" name="isbn" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="language-add" class="col-form-label">Język</label>
+                                <input type="text" class="form-control" id="language-add" name="language" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="year-of-publication-add" class="col-form-label">Rok publikacji</label>
+                                <input type="number" class="form-control" id="year-of-publication-add" name="yearOfPublication" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="publisher-add" class="col-form-label">Wydawnictwo</label>
+                                <input type="text" class="form-control" id="publisher-add" name="publisher" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="number-of-pages-add" class="col-form-label">Liczba stron</label>
+                                <input type="number" class="form-control" id="number-of-pages-add" name="numberOfPages" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description-add" class="col-form-label">Opis (do 2000 znaków)</label>
+                                <input type="text" class="form-control" id="description-add" name="description" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="price-add" class="col-form-label">Cena (PLN)</label>
+                                <input type="number" step="any" class="form-control" id="price-add" name="price" required="required" />
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <button style="display: block; margin-left: auto; margin-right: 0;" type="submit" class="btn btn-primary">Zapisz</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-secondary">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edytuj książkę</h5>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/admin/books/update}" method="put">
+                            <div class="form-group">
+                                <label for="id-edit" class="col-form-label">ID</label>
+                                <input type="text" class="form-control" id="id-edit" name="id" readonly="readonly" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="title-edit" class="col-form-label">Tytuł</label>
+                                <input type="text" class="form-control" id="title-edit" name="title" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="authors-edit" class="col-form-label">Autorzy</label>
+                                <input type="text" class="form-control" id="authors-edit" name="authors" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="isbn-edit" class="col-form-label">ISBN</label>
+                                <input type="text" class="form-control" id="isbn-edit" name="isbn" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="language-edit" class="col-form-label">Język</label>
+                                <input type="text" class="form-control" id="language-edit" name="language" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="year-of-publication-edit" class="col-form-label">Rok publikacji</label>
+                                <input type="number" class="form-control" id="year-of-publication-edit" name="yearOfPublication" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="publisher-edit" class="col-form-label">Wydawnictwo</label>
+                                <input type="text" class="form-control" id="publisher-edit" name="publisher" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="number-of-pages-edit" class="col-form-label">Liczba stron</label>
+                                <input type="number" class="form-control" id="number-of-pages-edit" name="numberOfPages" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description-edit" class="col-form-label">Opis (do 2000 znaków)</label>
+                                <input type="text" class="form-control" id="description-edit" name="description" required="required" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="price-edit" class="col-form-label">Cena (PLN)</label>
+                                <input type="number" step="any" class="form-control" id="price-edit" name="price" required="required" />
+                            </div>
+
+                            <br />
+
+                            <div class="form-group">
+                                <button style="display: block; margin-left: auto; margin-right: 0;" type="submit" class="btn btn-primary">Zapisz</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal" id="deleteModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-secondary">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Potwierdzenie usunięcia</h5>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+                            Zamknij
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>Czy na pewno chcesz usunąć ten element?</p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nie</button>
+                        <a type="button" class="btn btn-primary" id="confirmDeleteButton">Tak</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Content End -->
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/lib/chart/chart.min.js"></script>
+<script src="/assets/lib/easing/easing.min.js"></script>
+<script src="/assets/lib/waypoints/waypoints.min.js"></script>
+<script src="/assets/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="/assets/lib/tempusdominus/js/moment.min.js"></script>
+<script src="/assets/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="/assets/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/book.js"></script>
+</body>
+
+</html>
