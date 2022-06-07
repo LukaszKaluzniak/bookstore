@@ -6,6 +6,9 @@ Księgarnia:
 - Płatności
 
 
+W pliku _application.properties_ należy skonfigurować dane dostępu (nazwę użytkownika oraz hasło) do swojej bazy danych.
+
+
 Utworzenie bazy danych korzystając z zawartości pliku database.txt jest wymagane do działania aplikacji.
 
 
