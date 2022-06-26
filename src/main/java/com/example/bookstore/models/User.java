@@ -36,18 +36,18 @@ public class User {
     private String password;
 
     @ManyToMany(cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
-            @JoinTable(
-                    name = "users_roles",
-                    joinColumns={@JoinColumn(name="user_id")},
-                    inverseJoinColumns={@JoinColumn(name="role_id")}
-            )
+    @JoinTable(
+        name = "users_roles",
+        joinColumns={@JoinColumn(name="user_id")},
+        inverseJoinColumns={@JoinColumn(name="role_id")}
+    )
     Set<Role> roles=new HashSet<>();
 
     @ManyToMany(cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
     @JoinTable(
-            name = "users_books2",
-            joinColumns={@JoinColumn(name="user_id")},
-            inverseJoinColumns={@JoinColumn(name="book2_id")}
+        name = "users_books2",
+        joinColumns={@JoinColumn(name="user_id")},
+        inverseJoinColumns={@JoinColumn(name="book2_id")}
     )
     Set<Book2> books2=new HashSet<>();
 
